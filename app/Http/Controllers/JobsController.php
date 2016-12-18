@@ -8,6 +8,11 @@ use App\Job;
 
 class JobsController extends Controller
 {
+
+    public function __construct() {
+        $this->middleware('auth', ['except' => ['index', 'show']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -37,7 +42,11 @@ class JobsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $job = new Job();
+        $job->fill($request->all());
+        $job->save();
+
+        return response()->json($job, 201);
     }
 
     /**
@@ -48,7 +57,15 @@ class JobsController extends Controller
      */
     public function show($id)
     {
-        //
+        $job = Job::with('company')->find($id);
+
+        if(!$job) {
+            return response()->json([
+                'message'   => 'Record not found',
+            ], 404);
+        }
+
+        return response()->json($job);
     }
 
     /**
@@ -71,7 +88,18 @@ class JobsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $job = Job::find($id);
+
+        if(!$job) {
+            return response()->json([
+                'message'   => 'Record not found',
+            ], 404);
+        }
+
+        $job->fill($request->all());
+        $job->save();
+
+        return response()->json($job);
     }
 
     /**
@@ -82,6 +110,14 @@ class JobsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $job = Job::find($id);
+
+        if(!$job) {
+            return response()->json([
+                'message'   => 'Record not found',
+            ], 404);
+        }
+
+        $job->delete();
     }
 }

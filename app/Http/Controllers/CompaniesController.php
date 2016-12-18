@@ -4,8 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Company;
+
 class CompaniesController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth', ['except' => ['index', 'show']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +19,8 @@ class CompaniesController extends Controller
      */
     public function index()
     {
-        //
+        $companies = Company::all();
+        return response()->json($companies);
     }
 
     /**
@@ -34,7 +41,11 @@ class CompaniesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $company = new Company();
+        $company->fill($request->all());
+        $company->save();
+
+        return response()->json($company, 201);
     }
 
     /**
@@ -45,7 +56,15 @@ class CompaniesController extends Controller
      */
     public function show($id)
     {
-        //
+        $company = Company::find($id);
+
+        if(!$company) {
+            return response()->json([
+                'message'   => 'Record not found',
+            ], 404);
+        }
+
+        return response()->json($company);
     }
 
     /**
@@ -68,7 +87,18 @@ class CompaniesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $company = Company::find($id);
+
+        if(!$company) {
+            return response()->json([
+                'message'   => 'Record not found',
+            ], 404);
+        }
+
+        $company->fill($request->all());
+        $company->save();
+
+        return response()->json($company);
     }
 
     /**
@@ -79,6 +109,14 @@ class CompaniesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $company = Company::find($id);
+
+        if(!$company) {
+            return response()->json([
+                'message'   => 'Record not found',
+            ], 404);
+        }
+
+        $company->delete();
     }
 }

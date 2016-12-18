@@ -8,7 +8,7 @@ class Company extends Model
 {
     protected $fillable = ['name', 'email', 'website', 'logo', 'password'];
 
-    protected $hidden = ['password'];
+    protected $hidden = ['password', 'deleted_at', 'updated_at'];
 
     protected $dates = ['deleted_at'];
 
