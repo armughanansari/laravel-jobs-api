@@ -2,10 +2,13 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Company extends Model
+class User extends Authenticatable
 {
+    use Notifiable;
+
     protected $fillable = ['name', 'email', 'website', 'logo', 'password'];
 
     protected $hidden = ['password', 'deleted_at', 'updated_at'];
